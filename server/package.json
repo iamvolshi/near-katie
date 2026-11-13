@@ -1,0 +1,19 @@
+{
+  "name": "near-katie-server",
+  "version": "0.1.0",
+  "description": "KATIE Guard (NEAR Hackathon 2026, security track): guarded agent payments on NEAR testnet with an append-only K-record. Offline-sign by default; broadcast opt-in only.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.22.2"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "attack-demo": "node attack-demo.js"
+  },
+  "dependencies": {
+    "dotenv": "16.4.7",
+    "express": "4.21.2",
+    "near-api-js": "7.5.3"
+  }
+}

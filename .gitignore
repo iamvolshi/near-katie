@@ -1,0 +1,16 @@
+# Secrets — never commit.
+.env
+.env.*
+!.env.example
+
+# Dependencies.
+node_modules/
+
+# Runtime state: the live append-only K-record ledger is written by the
+# server at runtime (data/krecord-live.json). Not source, not committed.
+# NOTE: do NOT ignore data/ itself — data/pool/, data/krecord-seed.json
+# and data/blocklist.json are seeded demo source data and MUST be committed.
+data/krecord-live.json
+
+# OS noise.
+.DS_Store

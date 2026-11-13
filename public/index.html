@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KATIE Guard — the agent checks before it pays, and the record keeps the receipt</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="wrap">
+  <p class="kicker">NEAR Hackathon 2026 &middot; KATIE Guard &middot; Security track (AI Security &amp; Defense)</p>
+  <h1>KATIE Guard</h1>
+  <p class="lede">An agent that pays on NEAR testnet must check first: the
+    human's policy, the counterparty, and the key it signs with. Every
+    decision — allow, warn, block — lands in an append-only K-record that
+    never rewrites what the agent believed.</p>
+  <p class="banner"><strong>SEEDED MOCK DATA + OFFLINE SIGNING.</strong> Every
+    person, business, invoice and amount on this page is invented for the
+    demo. Payments are signed offline with an ephemeral in-memory key and
+    <strong>never broadcast</strong> — no tokens move. Testnet only; there is
+    no mainnet path and no broadcast path in this prototype.</p>
+  <p id="rpc-status" class="status" role="status">Checking the NEAR testnet connection&hellip;</p>
+  <nav class="steps" aria-label="The folder and the four acts">
+    <a href="#folder" data-step="0"><span>0</span> FOLDER</a>
+    <a href="#act1" data-step="1"><span>1</span> POLICY</a>
+    <a href="#act2" data-step="2"><span>2</span> CHECK</a>
+    <a href="#act3" data-step="3"><span>3</span> PAY</a>
+    <a href="#act4" data-step="4"><span>4</span> AUDIT</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="act" id="folder">
+    <h2><span class="num">0</span> THE FOLDER</h2>
+    <p class="plain">KATIE Guard snaps onto a messy folder and sorts it by what
+      each file is actually about — never by its filename. One file in this
+      folder is labelled test data carrying an injected instruction. It is
+      data, not an order — Act 3 shows it getting blocked.</p>
+    <label class="btn" for="folder-input">Add folder</label>
+    <input type="file" id="folder-input" webkitdirectory directory multiple hidden>
+    <button id="attach-btn" class="btn secondary">Use the demo folder (35 files)</button>
+    <p id="folder-name" class="status" role="status">No folder chosen yet. The demo folder is <code>data/pool</code> in this repo.</p>
+    <p id="folder-status" class="status" role="status"></p>
+    <p id="injected-note" class="status" role="status"></p>
+    <div id="subjects" class="cards"></div>
+    <div id="unfiled"></div>
+    <p id="report-hint" class="status">Attach the data pool first, then pick a subject.</p>
+    <div id="report"></div>
+    <div id="source-viewer" class="source-viewer" hidden></div>
+  </section>
+
+  <section class="act" id="act1">
+    <h2><span class="num">1</span> POLICY</h2>
+    <p class="plain">The human sets the rules. Caps, the approval threshold,
+      and the allowlist. Only this form can change them — pool files, chat
+      logs and pasted text can never set policy. Saving writes a permission
+      entry to the K-record.</p>
+    <div class="form-grid">
+      <label>Per-payment cap (NEAR)
+        <input type="number" id="policy-cap" min="0.01" step="0.01" value="1"></label>
+      <label>Daily cap (NEAR)
+        <input type="number" id="policy-daily" min="0.01" step="0.01" value="5"></label>
+      <label>Human approval at or over (NEAR)
+        <input type="number" id="policy-threshold" min="0.01" step="0.01" value="0.5"></label>
+      <label>Allowlist (comma-separated account ids)
+        <input type="text" id="policy-allowlist" value="supplier-demo.testnet" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <p><button id="policy-save" class="btn">Save policy</button></p>
+    <p id="policy-status" class="status" role="status">Loading the current policy&hellip;</p>
+    <div id="policy-current"></div>
+  </section>
+
+  <section class="act" id="act2">
+    <h2><span class="num">2</span> CHECK</h2>
+    <p class="plain">Before any payment, the counterparty check returns
+      allow, warn, or block — with reasons. Signals: the shared blocklist,
+      NEAR testnet RPC reads (account, balance, keys, contract code),
+      prior interactions in the K-record, and contract code changes.
+      Account age is not scored: a plain RPC view cannot provide it.</p>
+    <label>Counterparty account id
+      <input type="text" id="check-account" value="supplier-demo.testnet" autocomplete="off" spellcheck="false"></label>
+    <p>
+      <button id="check-btn" class="btn">Run check</button>
+      <button type="button" class="btn secondary preset" data-account="supplier-demo.testnet">supplier (allowlisted)</button>
+      <button type="button" class="btn secondary preset" data-account="evil-drainer-demo.testnet">blocklisted demo</button>
+      <button type="button" class="btn secondary preset" data-account="phish-claim-demo.testnet">phishing demo</button>
+    </p>
+    <p id="check-status" class="status" role="status"></p>
+    <div id="check-result"></div>
+  </section>
+
+  <section class="act" id="act3">
+    <h2><span class="num">3</span> PAY — GUARDED</h2>
+    <p class="plain">The agent proposes a payment. Policy runs first, then the
+      counterparty check, then the guarded signing wrapper. On block, the
+      wrapper refuses to sign. On warn, a human must confirm. Signing uses a
+      function-call key scoped to one demo contract — never a full-access key
+      — and the signed transaction is shown, never broadcast.</p>
+    <div class="form-grid">
+      <label>Pay to (account id)
+        <input type="text" id="pay-receiver" value="supplier-demo.testnet" autocomplete="off" spellcheck="false"></label>
+      <label>Amount (NEAR)
+        <input type="number" id="pay-amount" min="0.01" step="0.01" value="0.4"></label>
+      <label>Memo (optional)
+        <input type="text" id="pay-memo" value="demo supplier payment" autocomplete="off"></label>
+    </div>
+    <p><button id="pay-btn" class="btn big">Propose payment</button></p>
+    <p id="pay-status" class="status" role="status"></p>
+    <div id="pay-result"></div>
+
+    <h3>Attack demo</h3>
+    <p class="plain">Run the prompt-injection attack: the injected note in the
+      pool tries to pay a blocklisted address and override the policy. The
+      same guard path as a real payment runs — and blocks it. Same demo as
+      <code>npm run attack-demo</code> in <code>server/</code>.</p>
+    <p><button id="attack-btn" class="btn secondary">Run the attack demo</button></p>
+    <p id="attack-status" class="status" role="status"></p>
+    <div id="attack-result"></div>
+  </section>
+
+  <section class="act" id="act4">
+    <h2><span class="num">4</span> AUDIT</h2>
+    <p class="plain">The K-record: everything the agent believed, was allowed
+      to do, was trusted with, refused, and signed — by date. Old entries are
+      never edited. When it was wrong, the correction is a new entry, and the
+      wrong belief stays in the log. The To date always defaults to today
+      (your local date); the From date defaults to the earliest seed entry.</p>
+    <div class="audit-controls">
+      <label>From <input type="date" id="audit-from"></label>
+      <label>To <input type="date" id="audit-to"></label>
+      <button id="audit-btn" class="btn">Run audit</button>
+    </div>
+    <p id="act4-status" class="status" role="status"></p>
+    <div id="audit"></div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p class="motto">The sheet changes. The notes never do.</p>
+  <p class="fine">KATIE Guard demo for the NEAR Hackathon 2026 (security
+    track). Pool, seed, and blocklist data are invented mock data. NEAR
+    testnet reads only; signing is offline-only with an ephemeral key;
+    nothing is broadcast and no tokens move.</p>
+</footer>
+
+<script src="js/catalog.js"></script>
+<script src="js/provenance.js"></script>
+<script src="js/krecord.js"></script>
+<script src="js/views.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

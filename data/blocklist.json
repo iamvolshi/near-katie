@@ -1,0 +1,20 @@
+{
+  "_note": "SEEDED DEMO DATA for the KATIE Guard hackathon entry. Every entry is INVENTED for this demo. These are not real threat reports, not real scammers, and not real intelligence. In a production deployment this file would be replaced by a real shared threat feed with signed evidence. A blocklist hit is a hard block: the guard refuses to sign.",
+  "entries": [
+    {
+      "accountId": "evil-drainer-demo.testnet",
+      "date": "2026-11-10",
+      "evidence": "Demo report: three testnet accounts reported funds leaving within seconds of calling a fake claim page that named this receiver. Report IDs DEMO-001, DEMO-002, DEMO-003 (invented).",
+      "reason": "Reported drainer address used in fake airdrop claims.",
+      "reportedBy": "demo-threat-feed (invented)"
+    },
+    {
+      "accountId": "phish-claim-demo.testnet",
+      "date": "2026-11-11",
+      "evidence": "Demo report: a copied wallet-support page asked users to send a 'verification' payment to this receiver. Screenshot hash DEMO-9f31 (invented).",
+      "reason": "Phishing claim page receiver impersonating a wallet support account.",
+      "reportedBy": "demo-threat-feed (invented)"
+    }
+  ],
+  "updated": "2026-11-12"
+}
