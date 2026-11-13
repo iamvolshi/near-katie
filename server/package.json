@@ -1,7 +1,7 @@
 {
   "name": "near-katie-server",
   "version": "0.1.0",
-  "description": "KATIE Guard (NEAR Hackathon 2026, security track): guarded agent payments on NEAR testnet with an append-only K-record. Offline-sign by default; broadcast opt-in only.",
+  "description": "KATIE Guard (NEAR Hackathon 2026, security track): guarded agent payments on NEAR testnet with an append-only K-record. Offline signing only; no broadcast path, no tokens move.",
   "type": "module",
   "private": true,
   "engines": {

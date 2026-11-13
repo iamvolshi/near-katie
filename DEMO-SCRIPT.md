@@ -9,8 +9,8 @@ them. Total target: under 3:00.
 Setup before recording (do not show): server running (`cd server &&
 npm start`), page open at http://localhost:3000, fresh ledger (delete
 `data/krecord-live.json` and restart the server if you rehearsed, so
-entry numbers match this script: policy #21, payment #22, block #23,
-held #24, confirmed #25, attack #26–#28).
+entry numbers match this script, in recording order: policy #21,
+attack #22–#24, payment #25, held #26, confirmed #27).
 
 ## 0:00–0:25 — Hook: the folder lies
 
